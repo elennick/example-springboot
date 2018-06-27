@@ -69,9 +69,5 @@ public class DbInsertUpdateTest {
     bazFound = server.find(Content.class).where().eq("name", "bazza").findOne();
     assertThat(fetchBaz.getName()).isEqualTo(bazFound.getName());
 
-//    new QContent()
-//        .name.istartsWith("interested")
-//        .version.greaterOrEqualTo(1L)
-//        .findList();
   }
 }

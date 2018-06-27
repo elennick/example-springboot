@@ -17,7 +17,7 @@ public class WiringTest {
   EbeanServer server;
 
   @Test
-  public void testHello() throws Exception {
+  public void testHello() {
 
     assertNotNull(server);
   }

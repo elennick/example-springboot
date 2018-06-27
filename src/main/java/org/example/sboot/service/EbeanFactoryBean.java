@@ -6,11 +6,9 @@ import io.ebean.config.ServerConfig;
 import io.ebean.spring.txn.SpringJdbcTransactionManager;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-//import io.ebean.springsupport.txn.SpringAwareJdbcTransactionManager;
 
 /**
  * Spring factory for creating the EbeanServer singleton.
@@ -34,7 +32,7 @@ public class EbeanFactoryBean implements FactoryBean<EbeanServer> {
     config.setDataSource(dataSource);
     config.setExternalTransactionManager(new SpringJdbcTransactionManager());
     config.loadFromProperties();
-    config.loadTestProperties(); //todo what does this get replaced with?
+    config.setDefaultServer(true);
 
     return EbeanServerFactory.create(config);
   }
