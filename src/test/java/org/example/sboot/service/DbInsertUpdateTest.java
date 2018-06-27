@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 
 
@@ -33,28 +34,40 @@ public class DbInsertUpdateTest {
     Content foo = new Content();
     foo.setName("foo");
     foo.save();
-    //server.save(foo);
+    server.save(foo);
+
+    Content fooFound = server.find(Content.class).where().eq("name", "foo").findOne();
+    assertThat(foo.getName()).isEqualTo(fooFound.getName());
 
     foo.setName("moo");
     foo.save();
+
+    fooFound = server.find(Content.class).where().eq("name", "moo").findOne();
+    assertThat(foo.getName()).isEqualTo(fooFound.getName());
 
     Content fetchFoo = Content.find.byId(foo.getId());
     fetchFoo.setName("boo");
     fetchFoo.save();
 
+    fooFound = server.find(Content.class).where().eq("name", "boo").findOne();
+    assertThat(fetchFoo.getName()).isEqualTo(fooFound.getName());
 
     // -------------------------------------------------------------
     // Repository style ...
 
     Content baz = new Content();
     baz.setName("baz");
-
     contentRepository.save(baz);
 
-    Content fetchBaz = contentRepository.byId(baz.getId());
+    Content bazFound = server.find(Content.class).where().eq("name", "baz").findOne();
+    assertThat(baz.getName()).isEqualTo(bazFound.getName());
 
+    Content fetchBaz = contentRepository.byId(baz.getId());
     fetchBaz.setName("bazza");
     contentRepository.save(fetchBaz);
+
+    bazFound = server.find(Content.class).where().eq("name", "bazza").findOne();
+    assertThat(fetchBaz.getName()).isEqualTo(bazFound.getName());
 
 //    new QContent()
 //        .name.istartsWith("interested")

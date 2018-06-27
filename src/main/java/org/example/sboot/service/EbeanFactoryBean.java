@@ -3,9 +3,13 @@ package org.example.sboot.service;
 import io.ebean.EbeanServer;
 import io.ebean.EbeanServerFactory;
 import io.ebean.config.ServerConfig;
+import io.ebean.spring.txn.SpringJdbcTransactionManager;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
 import org.springframework.stereotype.Component;
+
+import javax.sql.DataSource;
 //import io.ebean.springsupport.txn.SpringAwareJdbcTransactionManager;
 
 /**
@@ -15,24 +19,22 @@ import org.springframework.stereotype.Component;
 public class EbeanFactoryBean implements FactoryBean<EbeanServer> {
 
   @Autowired
-  CurrentUser currentUser;
-  
-//  @Autowired
-//  DataSource dataSource;
-  
+  private CurrentUser currentUser;
+
+  @Autowired
+  private DataSource dataSource;
+
   @Override
-  public EbeanServer getObject() throws Exception {
+  public EbeanServer getObject() {
 
     ServerConfig config = new ServerConfig();
     config.setName("db");
     config.setCurrentUserProvider(currentUser);
 
-//    // set the spring's datasource and transaction manager.
-//    config.setDataSource(dataSource);
-//    config.setExternalTransactionManager(new SpringAwareJdbcTransactionManager());
-
+    config.setDataSource(dataSource);
+    config.setExternalTransactionManager(new SpringJdbcTransactionManager());
     config.loadFromProperties();
-    config.loadTestProperties();
+    config.loadTestProperties(); //todo what does this get replaced with?
 
     return EbeanServerFactory.create(config);
   }
