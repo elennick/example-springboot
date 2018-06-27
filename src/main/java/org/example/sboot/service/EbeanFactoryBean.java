@@ -8,8 +8,6 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
-
 /**
  * Spring factory for creating the EbeanServer singleton.
  */
@@ -19,9 +17,6 @@ public class EbeanFactoryBean implements FactoryBean<EbeanServer> {
   @Autowired
   private CurrentUser currentUser;
 
-  @Autowired
-  private DataSource dataSource;
-
   @Override
   public EbeanServer getObject() {
 
@@ -29,7 +24,6 @@ public class EbeanFactoryBean implements FactoryBean<EbeanServer> {
     config.setName("db");
     config.setCurrentUserProvider(currentUser);
 
-    config.setDataSource(dataSource);
     config.setExternalTransactionManager(new SpringJdbcTransactionManager());
     config.loadFromProperties();
     config.setDefaultServer(true);
